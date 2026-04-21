@@ -1,13 +1,274 @@
 {
-    "atomType": "Molecule",
-    "x": 0,
-    "y": 0,
-    "uniqueID": "id-709",
-    "name": "Involute_Gear",
-    "topLevel": true,
-    "allAtoms": [],
-    "allConnectors": [],
-    "unitsKey": "MM",
-    "fileTypeVersion": 1,
-    "filetypeVersion": 1
+  "atomType": "Molecule",
+  "x": 0,
+  "y": 0,
+  "uniqueID": "id-709",
+  "name": "Involute_Gear",
+  "ioValues": [
+    {
+      "name": "Number_of_Teeth",
+      "ioValue": 20,
+      "currentEquation": "20"
+    },
+    {
+      "name": "Pitch",
+      "ioValue": 5,
+      "currentEquation": "5"
+    },
+    {
+      "name": "Thickness",
+      "ioValue": 10
+    },
+    {
+      "name": "Pressure_Angle",
+      "ioValue": 20,
+      "currentEquation": "20"
+    }
+  ],
+  "topLevel": true,
+  "allAtoms": [
+    {
+      "atomType": "Output",
+      "x": 0.98,
+      "y": 0.5,
+      "uniqueID": "id-710",
+      "ioValues": [
+        {
+          "name": "number or geometry",
+          "ioValue": "__GEOMETRY_INPUT__"
+        }
+      ]
+    },
+    {
+      "atomType": "Code",
+      "x": 0.35714285714285715,
+      "y": 0.2646239554317549,
+      "uniqueID": "id-712",
+      "ioValues": [
+        {
+          "name": "teeth",
+          "ioValue": 20
+        },
+        {
+          "name": "pitch",
+          "ioValue": 5
+        },
+        {
+          "name": "thickness",
+          "ioValue": 10
+        },
+        {
+          "name": "pressureAngle",
+          "ioValue": 20
+        }
+      ],
+      "codeVersion": 1,
+      "code": "const Inputs = [\n  { inputName: \"teeth\", type: \"number\", defaultValue: 20 },\n  { inputName: \"pitch\", type: \"number\", defaultValue: 5 },\n  { inputName: \"thickness\", type: \"number\", defaultValue: 5 },\n  { inputName: \"pressureAngle\", type: \"number\", defaultValue: 20 },\n];\n\nconst N = Math.max(3, Math.round(teeth));\nconst p = pitch;\nconst m = p / Math.PI;                                 // module\nconst alpha = (pressureAngle * Math.PI) / 180;         // pressure angle (rad)\nconst pitchR = (N * p) / (2 * Math.PI);                // pitch radius\nconst addR  = pitchR + m;                              // addendum (tip) radius\nconst rootR = Math.max(0.1, pitchR - 1.25 * m);        // dedendum (root) radius\nconst baseR = pitchR * Math.cos(alpha);                // base circle radius\n\nconst inv = (a) => Math.tan(a) - a;                    // involute function\nconst invAtPitch  = inv(alpha);\nconst halfToothPitch = Math.PI / (2 * N);              // half tooth angle at pitch circle\n\nconst tMax = Math.acos(Math.min(1, baseR / addR));     // param at tip\nconst tMin = rootR > baseR ? Math.acos(Math.min(1, baseR / rootR)) : 0;\n\nconst steps = 16;\nconst toothAngle = (2 * Math.PI) / N;\nconst pts = [];\n\nfor (let i = 0; i < N; i++) {\n  const c = i * toothAngle;\n  const leftStart  = c - halfToothPitch - invAtPitch;  // involute origin on base circle (left flank)\n  const rightStart = c + halfToothPitch + invAtPitch;  // involute origin on base circle (right flank)\n\n  // Radial line down to root circle if root is below base\n  if (rootR < baseR) {\n    pts.push([rootR * Math.cos(leftStart), rootR * Math.sin(leftStart)]);\n  }\n  // Left flank: involute from base (or root) up to tip\n  for (let s = 0; s <= steps; s++) {\n    const t = tMin + (tMax - tMin) * (s / steps);\n    const r = baseR / Math.cos(t);\n    const ang = leftStart + inv(t);\n    pts.push([r * Math.cos(ang), r * Math.sin(ang)]);\n  }\n  // Right flank: mirrored involute from tip back down\n  for (let s = 0; s <= steps; s++) {\n    const t = tMax - (tMax - tMin) * (s / steps);\n    const r = baseR / Math.cos(t);\n    const ang = rightStart - inv(t);\n    pts.push([r * Math.cos(ang), r * Math.sin(ang)]);\n  }\n  if (rootR < baseR) {\n    pts.push([rootR * Math.cos(rightStart), rootR * Math.sin(rightStart)]);\n  }\n}\n\nlet pen = replicad.draw(pts[0]);\nfor (let i = 1; i < pts.length; i++) pen = pen.lineTo(pts[i]);\nconst drawing = pen.close();\n\nconst solid = drawing.sketchOnPlane().extrude(thickness);\nreturn { geometry: [solid], dimension: \"3D\", tags: [], color: \"#aad7f2\", plane: null, bom: [] };"
+    },
+    {
+      "atomType": "Move",
+      "x": 0.6071428571428572,
+      "y": 0.7158774373259054,
+      "uniqueID": "id-718",
+      "ioValues": [
+        {
+          "name": "geometry",
+          "ioValue": "__GEOMETRY_INPUT__"
+        },
+        {
+          "name": "xDist",
+          "ioValue": 0
+        },
+        {
+          "name": "yDist",
+          "ioValue": 0
+        },
+        {
+          "name": "zDist",
+          "ioValue": 0
+        }
+      ]
+    },
+    {
+      "atomType": "Rotate",
+      "x": 0.48082010582010587,
+      "y": 0.7743732590529249,
+      "uniqueID": "id-724",
+      "ioValues": [
+        {
+          "name": "geometry",
+          "ioValue": "__GEOMETRY_INPUT__"
+        },
+        {
+          "name": "x-axis degrees",
+          "ioValue": 0
+        },
+        {
+          "name": "y-axis degrees",
+          "ioValue": 0
+        },
+        {
+          "name": "z-axis degrees",
+          "ioValue": 9,
+          "currentEquation": "360/40"
+        }
+      ]
+    },
+    {
+      "atomType": "Move",
+      "x": 0.7123015873015873,
+      "y": 0.713091922005571,
+      "uniqueID": "id-730",
+      "ioValues": [
+        {
+          "name": "geometry",
+          "ioValue": "__GEOMETRY_INPUT__"
+        },
+        {
+          "name": "xDist",
+          "ioValue": 0
+        },
+        {
+          "name": "yDist",
+          "ioValue": 0
+        },
+        {
+          "name": "zDist",
+          "ioValue": 0
+        }
+      ]
+    },
+    {
+      "atomType": "Equation",
+      "x": 0.28390596745027125,
+      "y": 0.7214484679665739,
+      "uniqueID": "id-736",
+      "name": "N * p / pi",
+      "ioValues": [
+        {
+          "name": "N",
+          "ioValue": 20
+        },
+        {
+          "name": "p",
+          "ioValue": 20
+        }
+      ],
+      "currentEquation": "N * p / pi"
+    },
+    {
+      "atomType": "Input",
+      "x": 0.025384615384615384,
+      "y": 0.3008356545961003,
+      "uniqueID": "id-742",
+      "name": "Number_of_Teeth"
+    },
+    {
+      "atomType": "Input",
+      "x": 0.025384615384615384,
+      "y": 0.46239554317548753,
+      "uniqueID": "id-745",
+      "name": "Pitch"
+    },
+    {
+      "atomType": "Input",
+      "x": 0.025384615384615384,
+      "y": 0.6295264623955432,
+      "uniqueID": "id-748",
+      "name": "Thickness"
+    },
+    {
+      "atomType": "Input",
+      "x": 0.025384615384615384,
+      "y": 0.7855153203342619,
+      "uniqueID": "id-751",
+      "name": "Pressure_Angle"
+    },
+    {
+      "atomType": "Code",
+      "x": 0.5171790235081375,
+      "y": 0.5403899721448467,
+      "uniqueID": "id-755",
+      "ioValues": [
+        {
+          "name": "teeth",
+          "ioValue": 20
+        },
+        {
+          "name": "pitch",
+          "ioValue": 5
+        },
+        {
+          "name": "thickness",
+          "ioValue": 5
+        },
+        {
+          "name": "pressureAngle",
+          "ioValue": 20
+        }
+      ],
+      "codeVersion": 1,
+      "code": "const Inputs = [\n  { inputName: \"teeth\", type: \"number\", defaultValue: 20 },\n  { inputName: \"pitch\", type: \"number\", defaultValue: 5 },\n  { inputName: \"thickness\", type: \"number\", defaultValue: 5 },\n  { inputName: \"pressureAngle\", type: \"number\", defaultValue: 20 },\n];\n\nconst N = Math.max(3, Math.round(teeth));\nconst p = pitch;\nconst m = p / Math.PI;                                 // module\nconst alpha = (pressureAngle * Math.PI) / 180;         // pressure angle (rad)\nconst pitchR = (N * p) / (2 * Math.PI);                // pitch radius\nconst addR  = pitchR + m;                              // addendum (tip) radius\nconst rootR = Math.max(0.1, pitchR - 1.25 * m);        // dedendum (root) radius\nconst baseR = pitchR * Math.cos(alpha);                // base circle radius\n\nconst inv = (a) => Math.tan(a) - a;                    // involute function\nconst invAtPitch  = inv(alpha);\nconst halfToothPitch = Math.PI / (2 * N);              // half tooth angle at pitch circle\n\nconst tMax = Math.acos(Math.min(1, baseR / addR));     // param at tip\nconst tMin = rootR > baseR ? Math.acos(Math.min(1, baseR / rootR)) : 0;\n\nconst steps = 16;\nconst toothAngle = (2 * Math.PI) / N;\nconst pts = [];\n\nfor (let i = 0; i < N; i++) {\n  const c = i * toothAngle;\n  const leftStart  = c - halfToothPitch - invAtPitch;  // involute origin on base circle (left flank)\n  const rightStart = c + halfToothPitch + invAtPitch;  // involute origin on base circle (right flank)\n\n  // Radial line down to root circle if root is below base\n  if (rootR < baseR) {\n    pts.push([rootR * Math.cos(leftStart), rootR * Math.sin(leftStart)]);\n  }\n  // Left flank: involute from base (or root) up to tip\n  for (let s = 0; s <= steps; s++) {\n    const t = tMin + (tMax - tMin) * (s / steps);\n    const r = baseR / Math.cos(t);\n    const ang = leftStart + inv(t);\n    pts.push([r * Math.cos(ang), r * Math.sin(ang)]);\n  }\n  // Right flank: mirrored involute from tip back down\n  for (let s = 0; s <= steps; s++) {\n    const t = tMax - (tMax - tMin) * (s / steps);\n    const r = baseR / Math.cos(t);\n    const ang = rightStart - inv(t);\n    pts.push([r * Math.cos(ang), r * Math.sin(ang)]);\n  }\n  if (rootR < baseR) {\n    pts.push([rootR * Math.cos(rightStart), rootR * Math.sin(rightStart)]);\n  }\n}\n\nlet pen = replicad.draw(pts[0]);\nfor (let i = 1; i < pts.length; i++) pen = pen.lineTo(pts[i]);\nconst drawing = pen.close();\n\nconst solid = drawing.sketchOnPlane().extrude(thickness);\nreturn { geometry: [solid], dimension: \"3D\", tags: [], color: \"#aad7f2\", plane: null, bom: [] };"
+    }
+  ],
+  "allConnectors": [
+    {
+      "ap2Name": "number or geometry",
+      "ap1ID": "id-712",
+      "ap2ID": "id-710"
+    },
+    {
+      "ap2Name": "geometry",
+      "ap1ID": "id-712",
+      "ap2ID": "id-724"
+    },
+    {
+      "ap2Name": "geometry",
+      "ap1ID": "id-718",
+      "ap2ID": "id-730"
+    },
+    {
+      "ap2Name": "geometry",
+      "ap1ID": "id-724",
+      "ap2ID": "id-718"
+    },
+    {
+      "ap2Name": "teeth",
+      "ap1ID": "id-742",
+      "ap2ID": "id-712"
+    },
+    {
+      "ap2Name": "N",
+      "ap1ID": "id-742",
+      "ap2ID": "id-736"
+    },
+    {
+      "ap2Name": "pitch",
+      "ap1ID": "id-745",
+      "ap2ID": "id-712"
+    },
+    {
+      "ap2Name": "thickness",
+      "ap1ID": "id-748",
+      "ap2ID": "id-712"
+    },
+    {
+      "ap2Name": "pressureAngle",
+      "ap1ID": "id-751",
+      "ap2ID": "id-712"
+    },
+    {
+      "ap2Name": "p",
+      "ap1ID": "id-751",
+      "ap2ID": "id-736"
+    },
+    {
+      "ap2Name": "pressureAngle",
+      "ap1ID": "id-751",
+      "ap2ID": "id-755"
+    }
+  ],
+  "unitsKey": "MM",
+  "fileTypeVersion": 1,
+  "filetypeVersion": 1
 }
