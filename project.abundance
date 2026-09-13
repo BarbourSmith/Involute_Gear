@@ -26,7 +26,7 @@
   "allAtoms": [
     {
       "atomType": "Output",
-      "x": 0.98,
+      "x": 1,
       "y": 0.5,
       "uniqueID": "id-710",
       "ioValues": [
@@ -38,36 +38,36 @@
     },
     {
       "atomType": "Input",
-      "x": 0.025384615384615384,
-      "y": 0.15384615384615385,
+      "x": 0,
+      "y": 0.2,
       "uniqueID": "id-742",
       "name": "Number_of_Teeth"
     },
     {
       "atomType": "Input",
-      "x": 0.025384615384615384,
-      "y": 0.24615384615384617,
+      "x": 0,
+      "y": 0.2,
       "uniqueID": "id-745",
       "name": "Pitch"
     },
     {
       "atomType": "Input",
-      "x": 0.025384615384615384,
-      "y": 0.3384615384615385,
+      "x": 0,
+      "y": 0.3,
       "uniqueID": "id-748",
       "name": "Thickness"
     },
     {
       "atomType": "Input",
-      "x": 0.025384615384615384,
-      "y": 0.4307692307692308,
+      "x": 0,
+      "y": 0.4,
       "uniqueID": "id-751",
       "name": "Pressure_Angle"
     },
     {
       "atomType": "Code",
-      "x": 0.4431216931216931,
-      "y": 0.34818941504178275,
+      "x": 0.4,
+      "y": 0.3,
       "uniqueID": "id-802",
       "ioValues": [
         {
