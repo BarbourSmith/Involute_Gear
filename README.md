@@ -2,7 +2,7 @@
 
 # Involute_Gear
 
-![](/project.svg)
+![](/project.png)
 
 ## Inputs
 
